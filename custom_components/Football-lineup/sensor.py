@@ -1,3 +1,4 @@
+from datetime import timedelta
 import requests
 import logging
 from homeassistant.components.sensor import PLATFORM_SCHEMA
@@ -9,6 +10,7 @@ import voluptuous as vol
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = 'Football Lineup'
+SCAN_INTERVAL = timedelta(minutes=30)  # Set the update interval to 30 minutes
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_KEY): cv.string,
