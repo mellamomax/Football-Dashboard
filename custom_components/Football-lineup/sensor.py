@@ -83,6 +83,7 @@ class FootballLineupSensor(Entity):
                         'starting XI': [
                             {
                                 'name': player['player']['name'],
+                                'ID': player['player']['id'],
                                 'position': player['player']['pos'],
                                 'number': player['player']['number'],
                            	'grid': player['player']['grid']  # Include the grid position
@@ -92,6 +93,7 @@ class FootballLineupSensor(Entity):
                         'substitutes': [
                             {
                                 'name': sub['player']['name'],
+                                'ID': sub['player']['id'],
                                 'position': sub['player']['pos'],
                                 'number': sub['player']['number'],
                             	'grid': sub['player'].get('grid', None)  # Include grid if available
