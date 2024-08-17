@@ -10,7 +10,7 @@ import voluptuous as vol
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = 'Football Fixtures'
-SCAN_INTERVAL = timedelta(minutes=120)  # Set the update interval to 120 minutes
+SCAN_INTERVAL = timedelta(minutes=60)  # Set the update interval to 60 minutes (1 hour)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_KEY): cv.string,
@@ -21,7 +21,14 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     api_key = config.get(CONF_API_KEY)
     name = config.get(CONF_NAME)
 
-    add_entities([FootballFixturesSensor(api_key, name)], True)
+    sensor = FootballFixturesSensor(api_key, name)
+    add_entities([sensor], True)
+
+    def handle_set_league(call):
+        league_id = call.data.get("league_id")
+        sensor.set_league(league_id)
+
+    hass.services.register("football_dashboard", "set_league", handle_set_league)
 
 class FootballFixturesSensor(Entity):
     def __init__(self, api_key, name):
@@ -29,6 +36,7 @@ class FootballFixturesSensor(Entity):
         self._name = name
         self._state = None
         self._attributes = {}
+        self._league_id = "140"  # Default to La Liga
 
     @property
     def name(self):
@@ -45,14 +53,17 @@ class FootballFixturesSensor(Entity):
     def update(self):
         self._get_fixtures()
 
+    def set_league(self, league_id):
+        self._league_id = league_id
+        self.update()  # Fetch new data for the selected league
+
     def _get_fixtures(self):
-        # Fetch fixtures for La Liga (league 140) for the 2024 season, Round 1
-        url = "https://v3.football.api-sports.io/fixtures?season=2024&league=140&round=Regular Season - 1"
+        url = f"https://v3.football.api-sports.io/fixtures?season=2024&league={self._league_id}&round=Regular Season - 1"
         headers = {
             'x-rapidapi-host': "v3.football.api-sports.io",
             'x-rapidapi-key': self._api_key
         }
-        _LOGGER.debug("Fetching fixtures for La Liga Round 1 of 2024 season")
+        _LOGGER.debug(f"Fetching fixtures for league ID {self._league_id} for the 2024 season, Round 1")
         response = requests.get(url, headers=headers)
         data = response.json()
         _LOGGER.debug("Fixtures response data: %s", data)
@@ -78,7 +89,6 @@ class FootballFixturesSensor(Entity):
                 }
                 fixtures.append(match_details)
             
-            # Set the state and attributes
             self._state = f"{len(fixtures)} fixtures found"
             self._attributes['fixtures'] = fixtures
         else:
