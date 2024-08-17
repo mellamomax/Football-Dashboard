@@ -5,5 +5,12 @@
   "documentation": "https://github.com/mellamomax/football-dashboard",
   "requirements": ["requests"],
   "dependencies": [],
-  "codeowners": ["@mellamomax"]
-} 
+  "codeowners": ["@mellamomax"],
+  "file_inclusion": [
+    {
+      "source": "lovelace/football-dashboard-card.js",
+      "destination": "/www/community/football-dashboard-card.js"
+    }
+  ]
+}
+w
