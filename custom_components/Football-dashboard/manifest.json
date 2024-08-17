@@ -1,0 +1,9 @@
+{
+  "domain": "football_dashboard",
+  "name": "Football Dashboard",
+  "version": "1.0",
+  "documentation": "https://github.com/mellamomax/football-dashboard",
+  "requirements": ["requests"],
+  "dependencies": [],
+  "codeowners": ["@mellamomax"]
+} 

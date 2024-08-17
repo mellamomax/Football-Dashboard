@@ -1,1 +1,0 @@
-DOMAIN = "football_lineup"
