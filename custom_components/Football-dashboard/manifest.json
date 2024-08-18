@@ -6,10 +6,11 @@
   "requirements": ["requests"],
   "dependencies": [],
   "codeowners": ["@mellamomax"],
-  "file_inclusion": [
+  "iot_class": "cloud_polling",
+  "resources": [
     {
-      "source": "lovelace/football-dashboard-card.js",
-      "destination": "/www/community/football-dashboard-card.js"
+      "url": "/hacsfiles/football_dashboard/football-dashboard-card.js",
+      "type": "module"
     }
   ]
 }

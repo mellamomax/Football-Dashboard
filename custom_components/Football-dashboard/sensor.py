@@ -10,7 +10,7 @@ import voluptuous as vol
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = 'Football Fixtures'
-SCAN_INTERVAL = timedelta(minutes=60)  # Set the update interval to 60 minutes (1 hour)
+SCAN_INTERVAL = timedelta(minutes=120)  # Set the update interval to 60 minutes (1 hour)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_KEY): cv.string,
