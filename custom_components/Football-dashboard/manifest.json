@@ -5,12 +5,5 @@
   "documentation": "https://github.com/mellamomax/football-dashboard",
   "requirements": ["requests"],
   "dependencies": [],
-  "codeowners": ["@mellamomax"],
-  "iot_class": "cloud_polling",
-  "resources": [
-    {
-      "url": "/hacsfiles/football_dashboard/football-dashboard-card.js",
-      "type": "module"
-    }
-  ]
+  "codeowners": ["@mellamomax"]
 }
