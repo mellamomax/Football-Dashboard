@@ -10,7 +10,7 @@ import voluptuous as vol
 _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_NAME = 'Football Fixtures'
-SCAN_INTERVAL = timedelta(minutes=120)  # Set the update interval to 60 minutes (1 hour)
+SCAN_INTERVAL = timedelta(minutes=120)  # Set the update interval to 120 minutes (2 hours)
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_API_KEY): cv.string,
@@ -64,11 +64,18 @@ class FootballFixturesSensor(Entity):
             'x-rapidapi-key': self._api_key
         }
         _LOGGER.debug(f"Fetching fixtures for league ID {self._league_id} for the 2024 season, Round 1")
-        response = requests.get(url, headers=headers)
-        data = response.json()
-        _LOGGER.debug("Fixtures response data: %s", data)
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()  # Raises an HTTPError if the response was unsuccessful
+            data = response.json()
+            _LOGGER.debug("Fixtures response data: %s", data)
+        except requests.exceptions.RequestException as e:
+            _LOGGER.error(f"Error fetching fixtures: {e}")
+            self._state = "API error"
+            self._attributes = {}
+            return
 
-        if data['response']:
+        if data.get('response'):
             fixtures = []
             for fixture in data['response']:
                 home_team = fixture['teams']['home']
@@ -88,7 +95,7 @@ class FootballFixturesSensor(Entity):
                     }
                 }
                 fixtures.append(match_details)
-            
+
             self._state = f"{len(fixtures)} fixtures found"
             self._attributes['fixtures'] = fixtures
         else:
